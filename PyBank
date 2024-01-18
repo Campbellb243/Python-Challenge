@@ -1,0 +1,42 @@
+print("Election Results")
+
+import os
+import csv
+
+current_directory = 'C:/Users/brand/OneDrive/Desktop/Starter_Code/PyPoll/Resources'
+file = 'election_data.csv'
+file_path = os.path.join(current_directory, file)
+
+print("File Path:", file_path)
+
+with open(file_path, 'r') as file:
+    reader = csv.reader(file)
+    next(reader)  # Skip the header row
+    data = list(reader)
+
+#print("Data:", data)
+
+total_votes = len(data)
+print("Total votes:", total_votes)
+
+candidate_votes = {}  # Dictionary to store candidate names as keys and their vote counts as values
+
+for row in data:
+    candidate = row[2]  # Assuming the candidate name is in the third column (index 2)
+    if candidate in candidate_votes:
+        candidate_votes[candidate] += 1
+    else:
+        candidate_votes[candidate] = 1
+
+total_votes = len(data)
+
+for candidate, votes in candidate_votes.items():
+    percentage = (votes / total_votes) * 100
+    print (candidate, ":", " {:.3f}%".format(percentage), " (", votes, ")", sep="")
+
+max_percentage = max(candidate_votes.values())
+winning_candidates = [candidate for candidate, votes in candidate_votes.items() if votes == max_percentage]
+
+print("Winner:")
+for candidate in winning_candidates:
+    print(candidate)
