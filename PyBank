@@ -14,7 +14,7 @@ with open(file_path, 'r') as file:
     next(reader)  # Skip the header row
     data = list(reader)
 
-#print("Data:", data)
+print("Data:", data)
 
 total_votes = len(data)
 print("Total votes:", total_votes)
