@@ -1,9 +1,11 @@
+print("Election Results")
+
 import os
 import csv
 
-directory = '/Users/brand/OneDrive/Desktop/Starter_Code/PyBank/Resources/'
-file = 'budget_data.csv'
-file_path = os.path.join(directory, file)
+#current_directory = 'C:/Users/brand/OneDrive/Desktop/Starter_Code/PyPoll/Resources'
+#file = 'election_data.csv'
+file_path = os.path.join("Resources", "election_data.csv")
 
 print("File Path:", file_path)
 
@@ -14,64 +16,27 @@ with open(file_path, 'r') as file:
 
 print("Data:", data)
 
-# Calculate the total number of months
-total_months = len(data)
-print("Total Months:", total_months)
+total_votes = len(data)
+print("Total votes:", total_votes)
 
-# Calculate the total profit/loss
-total_profit = sum(int(row[1]) for row in data)
-print("Total Profit:", total_profit)
+candidate_votes = {}  # Dictionary to store candidate names as keys and their vote counts as values
 
-# Calculate the changes in profit/loss
-changes = []
-previous_month_profit = int(data[0][1])  # Set the previous month's profit/loss to the first month's value
-for row in data[1:]:
-    current_month_profit = int(row[1])
-    change = current_month_profit - previous_month_profit
-    changes.append(change)
-    previous_month_profit = current_month_profit
+for row in data:
+    candidate = row[2]  # Assuming the candidate name is in the third column (index 2)
+    if candidate in candidate_votes:
+        candidate_votes[candidate] += 1
+    else:
+        candidate_votes[candidate] = 1
 
-# Calculate the average change
-average_change = sum(changes) / len(changes)
-print("Average Change:",  average_change)
+total_votes = len(data)
 
-# Assuming the profit/loss values are stored in the second column of the data list
-profits_losses = [int(row[1]) for row in data]
+for candidate, votes in candidate_votes.items():
+    percentage = (votes / total_votes) * 100
+    print (candidate, ":", " {:.3f}%".format(percentage), " (", votes, ")", sep="")
 
-# Initialize the maximum value and its corresponding date
-max_profit_increase = changes[0]
-max_profit_increase_date = data[1][0]
+max_percentage = max(candidate_votes.values())
+winning_candidates = [candidate for candidate, votes in candidate_votes.items() if votes == max_percentage]
 
-# Iterate over the changes list starting from the second element
-for i in range(1, len(changes)):
-    if changes[i] > max_profit_increase:
-        max_profit_increase = changes[i]
-        max_profit_increase_date = data[i+1][0]
-
-# Print the greatest increase in profits and its corresponding date
-print("The greatest increase in profits: ", max_profit_increase_date, max_profit_increase )
-
-#Find the least greatest function
-
-least_profit_decrease = changes[0]
-least_profit_decrease_date = data[1][0]
-
-for i in range(1, len(changes)):
-    if changes[i] < least_profit_decrease:
-        least_profit_decrease = changes[i]
-        least_profit_decrease_date = data[i+1][0]
-
-print("The greatest decrease in profits: ", least_profit_decrease_date, least_profit_decrease)
-# Perform your analysis and store the results in variables
-
-# Open the text file in write mode
-with open('results.txt', 'w') as file:
-    # Write the analysis results to the file
-    file.write("Total Months: {}\n".format(total_months))
-    file.write("Total Profit: {}\n".format(total_profit))
-    file.write("Average Change: {}\n".format(average_change))
-    file.write("Greatest Increase: {}\n".format(max_profit_increase))
-    file.write("Greatest Decrease: {}\n".format(least_profit_decrease))
-
-# Print a message indicating that the file has been exported
-print("Analysis results exported to results.txt")
+print("Winner:")
+for candidate in winning_candidates:
+    print(candidate)
